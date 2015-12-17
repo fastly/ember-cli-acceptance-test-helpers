@@ -153,3 +153,23 @@ test('option `contains` filters the elements', function(assert) {
   assert.ok(!result.ok, 'fails');
   assert.equal(result.message, 'Found 2 of .the-div but 0/1 containing "not found"');
 });
+
+test('can be passed a string message', function(assert) {
+  var find = function(){
+    return $([makeElement('div', {class:'the-div'})]);
+  };
+  var app = makeApp(find);
+  var result = expectElement(app, '.the-div', 'this IS the div you were looking for');
+
+  assert.ok(result.ok, 'passes');
+  assert.equal(result.message, 'this IS the div you were looking for');
+
+  find = function(){
+    return $([]);
+  };
+  app = makeApp(find);
+  result = expectElement(app, '.vid', 'this is NOT the div you were looking for');
+
+  assert.ok(!result.ok, 'fails');
+  assert.equal(result.message, 'this is NOT the div you were looking for (Found 0 of .vid but expected 1)');
+});

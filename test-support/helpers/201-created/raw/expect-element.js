@@ -18,6 +18,10 @@ export default function(app, selector, count, options) {
     options.count = count;
   }
 
+  if (typeof count === 'string') {
+    options.message = count;
+  }
+
   count = options.count === undefined ? 1 : options.count;
 
   if (options.contains) {
@@ -39,10 +43,22 @@ export default function(app, selector, count, options) {
       }
     }
   } else {
-    result.message = 'Found ' + elements.length + ' of ' + selector;
+    var defaultSuccessMessage = 'Found ' + elements.length + ' of ' + selector;
+    var defaultFailureMessage = defaultSuccessMessage + ' but expected ' + count;
+
+    /*if (!options.message) {
+      result.message = defaultMessage;
+    }*/
+
     result.ok = elements.length === count;
-    if (!result.ok) {
-      result.message += ' but expected ' + count;
+    if (result.ok && options.message) {
+      result.message = options.message;
+    } else if (options.message) {
+      result.message = options.message + ' (' + defaultFailureMessage + ')';
+    } else if (result.ok) {
+      result.message = defaultSuccessMessage;
+    } else {
+      result.message = defaultFailureMessage;
     }
   }
 
