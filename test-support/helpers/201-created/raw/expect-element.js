@@ -4,22 +4,21 @@ function filterElements(elements, text){
   return elements.filter(':contains(' + text + ')');
 }
 
-export default function(app, selector, count, options){
+export default function(app, selector, count, options) {
+  var elements = app.testHelpers.find(selector, getContext());
+  var result = {};
+
+  if (!options) { options = {}; }
+
   if (typeof count === 'object') {
     options = count;
   }
 
-  if (!options) { options = {}; }
-  
   if (typeof count === 'number') {
     options.count = count;
   }
 
   count = options.count === undefined ? 1 : options.count;
-
-  var elements = app.testHelpers.find(selector, getContext());
-
-  var result = {};
 
   if (options.contains) {
     var text = options.contains;
