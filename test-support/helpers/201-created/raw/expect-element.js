@@ -7,10 +7,12 @@ function filterElements(elements, text){
 export default function(app, selector, count, options) {
   var elements = app.testHelpers.find(selector, getContext());
   var result = {};
+  var message = '';
 
   if (!options) { options = {}; }
 
   if (typeof count === 'object') {
+    message = options;
     options = count;
   }
 
@@ -20,6 +22,14 @@ export default function(app, selector, count, options) {
 
   if (typeof count === 'string') {
     options.message = count;
+  }
+
+  if (typeof options === 'string') {
+    options.message = options;
+  }
+
+  if(!options.message) {
+    options.messsage = message;
   }
 
   count = options.count === undefined ? 1 : options.count;

@@ -168,8 +168,31 @@ test('can be passed a string message', function(assert) {
     return $([]);
   };
   app = makeApp(find);
-  result = expectElement(app, '.vid', 'this is NOT the div you were looking for');
+  result = expectElement(app, '.the-div', 'this is NOT the div you were looking for');
 
   assert.ok(!result.ok, 'fails');
-  assert.equal(result.message, 'this is NOT the div you were looking for (Found 0 of .vid but expected 1)');
+  assert.equal(result.message, 'this is NOT the div you were looking for (Found 0 of .the-div but expected 1)');
+});
+
+test('can be passed a string message with contains option', function(assert) {
+  var find = function(){
+    return $([
+      makeElement('div', {class:'the-div'}),
+      makeElement('div', {class:'the-div', text: 'foo bar'})
+    ]);
+  };
+  var app = makeApp(find);
+  var result = expectElement(app, '.the-div', {contains:'foo'}, 'this IS the div you were looking for');
+
+  assert.ok(result.ok, 'passes');
+  assert.equal(result.message, 'this IS the div you were looking for');
+
+  find = function(){
+    return $([]);
+  };
+  app = makeApp(find);
+  result = expectElement(app, '.the-div', {contains:'food'}, 'this is NOT the div you were looking for');
+
+  assert.ok(!result.ok, 'fails');
+  assert.equal(result.message, 'this is NOT the div you were looking for (Found 0 of .the-div but expected 1)');
 });
